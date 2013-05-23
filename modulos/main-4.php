@@ -11,8 +11,8 @@
     include("../clases/funcionesGUI.php");
     include("../includes/txtApp.php");
     
-    if(!isset($_SESSION[$txtApp['session']['idUsuario']])){
-	header("Location: cerrar_sesion.php?<?=$SID;?>");
+    if(!isset($_SESSION[$txtApp['session']['idUsuario']])){	
+	echo "<script type='text/javascript'> window.location.href='cerrar_sesion.php'; </script>";
 	exit;
     }
     
@@ -39,7 +39,7 @@
 	    contenedorPrincipal();
 	});
 	ClosingVar =true
-	//window.onbeforeunload = ExitCheck;
+	window.onbeforeunload = ExitCheck;
 	function ExitCheck(){  
 		///control de cerrar la ventana///
 	 	if(ClosingVar == true){
@@ -50,6 +50,7 @@
 	setInterval(vMantto,10000);
         setInterval(vActNuevas,10000);
 	setInterval(vActSistema,10000);
+	setInterval(vSesion,1500000);
 	window.onresize=contenedorPrincipal;
         function contenedorPrincipal(){
             var altoDoc=$("#contenedorAppMain").height();	    
@@ -107,20 +108,48 @@
 .estiloPantallaCompleta:hover{border: 1px solid #CCC;cursor: pointer;}
 .estiloDivIzqPCompleta{float: left;}
 .estiloDivDerPCompleta{margin-top: 5px;margin-left: 4px;font-weight: bold;float: left;}
+.estiloImgBuscador{float: right;border: 0px solid #FF0000;margin: 2px 3px;width: 20px;height: 18px;}
+.estiloImgBuscador:hover{border: 1px solid blue;cursor: pointer;}
+/*Buscador UI*/
+#buscadorEquiposUI{display: none;position: absolute;right: 3px;margin-top: -3px;width: 640px;height: 85%;border: 1px solid blue;z-index: 1000;background: #B0D0FF;}
+#estiloDivBusqueda{border-bottom: 1px solid blue;border-top: 1px solid blue;margin-top: -1px;width: 628px;height: 30px;padding: 6px;z-index: 1000;background: #B0D0FF;}
+.estiloTituloBuscar{color: #333;font-weight: bold;}
+#txtBusquedaImeiPrincipal{width: 200px;font-size: 16px;font-weight: bold;}
+#estiloBtnCerrarDiv{float: right;border: 0px solid #FF0000;width: 19px;height: 19px;}
+#divResultadosBusquedaPrincipal{position: absolute;overflow-x: auto;border: 1px solid #F0F0F0;margin: 1px;background: #FFF;width: 99.3%;height: 91%;}
+/*Fin Buscador UI*/
 </style>
 <body>
+    <div id="session"></div>
     <div id="cargaPerfil"></div>
     <div id="contenedorAppMain">
         <div id="barraHerramientasUsuario">
-            <div class="estiloMensajeModulo"><? echo $txtApp['appPrincipal']['msgModulo'];?></div>            
+            <div class="estiloMensajeModulo"><? echo $txtApp['appPrincipal']['msgModulo'];?> <span style="color: orange;font-weight: bold;">BETA</span></div>            
             <div class="iconoUsuarioAppCerrar"><a href="cerrar_sesion.php?<?=$SID;?>" id="" title="<?=$txtApp['appPrincipal']['cerrarSesion'];?>" ><img src="../img/shutdown1.png" border="0" width="35" height="36" /></a></div>
             <div class="iconoUsuarioApp">&nbsp;</div>
             <div class="datosUsuarioAppPrincipal" onclick="mostrarPerfilUsuario()" title="Ver Perfil del Usuario"><?=$_SESSION[$txtApp['session']['nombreUsuario']]." ".$_SESSION[$txtApp['session']['apellidoUsuario']];?></div>
         </div>
         <div id="menu" class="barraMenu" style="z-index: 50;height: 25px;">
-<?          $objPermisos->construyeMenuNuevo($_SESSION[$txtApp['session']['idUsuario']]);?>            
+<?          $objPermisos->construyeMenuNuevo($_SESSION[$txtApp['session']['idUsuario']]);?>
+	    <div class="estiloImgBuscador" title="Mostrar Buscador" onclick="mostrarBuscadorEquipos()">
+		<img src="../img/search-icon.png" border="0">
+	    </div>
         </div>
-        <div id="contenedorVentanaMDI">
+	
+	<!--Adpatacion de la capa del buscador-->	
+	<div id="buscadorEquiposUI">
+	    <div id="estiloDivBusqueda">
+		<span class="estiloTituloBuscar">Buscar:</span>
+		<input type="text" name="txtBusquedaImeiPrincipal" id="txtBusquedaImeiPrincipal" onkeypress="verificaTeclaImeiBusquedaPrincipal(event)">
+		<input type="radio" id="filtroImei" name="filtroBusqueda" value="imei" checked="checked" ><label for="filtroImei">Imei</label>
+		<input type="radio" id="filtroSerie" name="filtroBusqueda" value="serial"><label for="filtroSerie">Serial</label>
+		<div id="estiloBtnCerrarDiv"><a href="#" onclick="cerrarBusquedaPrincipal()"><img src="../img/close-icon.png"></a></div>
+	    </div>	    
+	    <div id="divResultadosBusquedaPrincipal"></div>
+	</div>	
+	<!--fin adaptacion del buscador-->
+        
+	<div id="contenedorVentanaMDI">
             <iframe id="contenedorVentana" name="contenedorVentana" class="contenedorVentanaMDIApp"></iframe>
         </div>
         <div id="barraestado2">
