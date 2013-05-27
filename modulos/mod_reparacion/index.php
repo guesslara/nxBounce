@@ -88,14 +88,7 @@ a:active {text-decoration: none;color: #666666;}
 </span>
 <span name="texto">
 </span>
-<!--<table width="200" border="1" align="center">
-  <tr>
-    <td><img src="../img/don lucho.jpg" width="436" height="306"></td>
-  </tr>
-  <tr>
-    <td><h4 align="center"><span class="Estilo53">Esto no es un ERROR, ni esta cansado si puede ver esto es : DON LUCHO </span></h4></td>
-  </tr>
-</table>-->
+
 <p class="style13">&nbsp;</p>
 <hr />
 <p align="center" class="style2">IQelectronics SA de CV &copy;</p>
