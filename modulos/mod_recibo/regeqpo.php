@@ -118,7 +118,7 @@ a:active {text-decoration: none;color: #FF0000;}
 			<tr>
 			  <th width="150" style="background: #F0F0F0;border: 1px solid #CCC;height: 15px;padding: 5px;">Identificador</th>
 			  <th width="420" style="text-align: left;">
-				<select name="" id="" style="width: 120px;">
+				<select name="cboIdentificador" id="cboIdentificador" style="width: 120px;">
 					<option value="" selected="selected"></option>
 					<option value="2F">2F</option>
 					<option value="MAQUILA">MAQUILA</option>

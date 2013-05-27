@@ -12,11 +12,20 @@
     $diagnostico2=$_POST['diagnostico2'];
     $obs=$_POST['obs'];
     $process=$_POST['proceso'];
+    $activacion=$_POST['activacion'];
+    $identificador=$_POST['identificador'];
     
-    $sql="INSERT INTO equiposrep (cap, fnextel, esn, imei, modelo, recibe, fecharec, diag1, diag2, obs, status) values ('$cap','$fnextel','$esn','$imei','$modelo','$recibe', '$fecharec', '$diagnostico1','$diagnostico2','$obs','In Repair')";
+    $sql="INSERT INTO equiposrep (cap, fnextel, esn, imei, modelo, recibe, fecharec, diag1, diag2, obs, status,fecha_activacion,clasificacion,process,statusgral) values ('$cap','$fnextel','$esn','$imei','$modelo','$recibe', '$fecharec', '$diagnostico1','$diagnostico2','$obs','In Repair','".$activacion."','".$identificador."','Bounce','REC')";
     $res=mysql_query($sql,conectarBd());
     
     if($res){
+        //se busca la diferencia para obtener la garantia del equipo
+        $sqlGarantia="SELECT DATEDIFF('".$fecharec."','".$activacion."') AS garantia";
+        $resGarantia=mysql_query($sqlGarantia,conectarBd());
+        $rowGarantia=mysql_fetch_array($resGarantia);
+        if($rowGarantia["garantia"]>180){
+            echo "<div style='border-top:1px solid #FF0000;border-bottom:1px solid #FF0000;height:20px;padding:5px;background:#F5A9A9;font-size:14px;color:#000;'>Equipo Fuera de GARANTIA !</div>";
+        }        
         echo "<script type='text/javascript'> alert('Registro Guardado'); registrarEquipo(); </script>";
     }else{
         echo "<div style='border-top:1px solid #FF0000;border-bottom:1px solid #FF0000;height:20px;padding:5px;background:#F5A9A9;font-size:14px;color:#000;'>Error al GUARDAR la informacion</div>";

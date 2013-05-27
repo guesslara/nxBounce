@@ -8,10 +8,9 @@ function ajaxApp(divDestino,url,parametros,metodo){
 	url:url,
 	data:parametros,
 	beforeSend:function(){ 
-		$("#cargadorGeneral").show(); 
+		$("#"+divDestino).show().html("Cargando..."); 
 	},
-	success:function(datos){ 
-		$("#cargadorGeneral").hide();
+	success:function(datos){ 		
 		$("#"+divDestino).show().html(datos);		
 	},
 	timeout:90000000,
@@ -37,4 +36,10 @@ function cerrarVentana(div){
 }
 function registrarEquipo(){
 	ajaxApp("detalleEmpaque","regeqpo.php","action=nuevo","GET");
+}
+function asignarEquipo(){
+	ajaxApp("detalleEmpaque","asignaeqpo.php","action=asignarEquipos","POST");
+}
+function listarAsignaciones(){
+	ajaxApp("detalleEmpaque","asignaeqpo.php","action=listarAsignaciones","POST");
 }

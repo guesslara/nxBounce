@@ -70,7 +70,8 @@
 		<div id="barraOpcionesEnsamble">
 			<div class="opcionesEnsamble" onclick="registrarEquipo()" title="">Registro de Equipos</div>
 			<div class="opcionesEnsamble" onclick="" title="">Buscar Equipos</div>
-			<div class="opcionesEnsamble" onclick="" title="">Asignar Equipos</div>
+			<div class="opcionesEnsamble" onclick="asignarEquipo()" title="">Asignar Equipos</div>
+			<div class="opcionesEnsamble" onclick="listarAsignaciones()" title="">Listar Equipos Asignados</div>
 			<div id="cargadorEmpaque" style="float:right;width:200px;height:20px;padding:5px;background:#FFF;border:1px solid #CCC;font-size:13px;text-align:right;"></div>
 		</div>
 		<!--<div id="infoEnsamble3">			

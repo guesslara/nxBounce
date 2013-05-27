@@ -20,11 +20,13 @@ function mensaje(){
 	valores[7]=$("#diagnostico1").val();
 	valores[8]=$("#diagnostico2").val();
 	valores[9]=$("#obs").val();
+	valores[10]=$("#campo_fecha").val();
+	valores[11]=$("#cboIdentificador").val();
 	
 	evalua=valida(valores);
 	if(evalua){
 		if(confirm('Datos Introducidos en la captura:'+'\n'+'\n'+'CAP Origen: '+valores[0]+'\n'+'Numero de Guia: '+valores[1]+'\n'+'ESN: '+valores[2]+'\n'+'IMEI: '+valores[3]+'\n'+'Modelo: '+valores[4]+'\n'+'Proceso: '+valores[5]+'\n'+'Recibe: '+valores[6]+'\n'+'Diagnostico 1: '+valores[7]+'\n'+'Diagnostico 2: '+valores[8]+'\n'+'Observaciones: '+valores[9]+'\n'+'\n'+'Los Datos son correctos?'+'\n'+'\n'+'Presione Aceptar para guardar o Cancelar para corregir algun dato'+'\n')){
-			parametros="action=guardarEquipo&cap="+valores[0]+"&guia="+valores[1]+"&serie="+valores[2]+"&imei="+valores[3]+"&modelo="+valores[4]+"&proceso="+valores[5]+"&recibe="+valores[6]+"&diagnostico1="+valores[7]+"&diagnostico2="+valores[8]+"&obs="+valores[9];
+			parametros="action=guardarEquipo&cap="+valores[0]+"&guia="+valores[1]+"&serie="+valores[2]+"&imei="+valores[3]+"&modelo="+valores[4]+"&proceso="+valores[5]+"&recibe="+valores[6]+"&diagnostico1="+valores[7]+"&diagnostico2="+valores[8]+"&obs="+valores[9]+"&activacion="+valores[10]+"&identificador="+valores[11];
 			ajaxApp("divResultadoInsercion","guardarEquipo.php",parametros,"POST");
 		}else{
 			return false;
@@ -37,7 +39,7 @@ function mensaje(){
 //y que algunos solo reciban numeros
 function valida(valores1){
 	//alert('funcion valida');
-	for(i=0;i<=7;i++){
+	for(i=0;i<=11;i++){
 		if(valores1[i]==""){
 			alert('No dejes ningun espacio en blanco');
 			return false;
@@ -89,4 +91,17 @@ function verificaTecla(evento,idElemento){
 			$("#cap").focus();
 		}
 	}
+}
+function guardarAsignacion(idEquipo,contador){
+	varNc="#cboTecnico"+contador;
+	var usuarioAsig=$(varNc).val();
+	alert(usuarioAsig);
+	if(usuarioAsig==""){
+		alert("Debe seleccionar un tecnico del Listado para poder Asignar");
+	}else{
+		ajaxApp("divGAsignacion","guardarAsignacion.php","action=guardar&id="+idEquipo+"&usuarioAsig="+usuarioAsig,"POST");
+	}
+}
+function eliminaAsig(action,idEquipo){	
+	ajaxApp("divGAsignacion","guardarAsignacion.php","action="+action+"&id="+idEquipo,"POST");
 }
