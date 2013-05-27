@@ -43,3 +43,6 @@ function asignarEquipo(){
 function listarAsignaciones(){
 	ajaxApp("detalleEmpaque","asignaeqpo.php","action=listarAsignaciones","POST");
 }
+function listarCapturas(){
+	ajaxApp("detalleEmpaque","listadoCapturas.php","action=listarCapturas","POST");
+}
