@@ -1,3 +1,15 @@
+<?
+	function conectarBd(){
+		require("../../includes/config.inc.php");
+		$link=mysql_connect($host,$usuario,$pass);
+		if($link==false){
+		    echo "Error en la conexion a la base de datos";
+		}else{
+		    mysql_select_db($db);
+		    return $link;
+		}				
+	}
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -40,10 +52,9 @@ body {
   </tr>
 </table>
 <?
-	include("../php/conectarbase.php");
 	//$sql="SELECT * FROM codrepefect where modelo = '$p'";
 	$sql="SELECT * FROM codrepefect ";
-	$result=mysql_db_query("db_iqe_ref",$sql);
+	$result=mysql_query($sql,conectarBd());
 	if($result==false){
 		echo "No hay Registros";
 	}

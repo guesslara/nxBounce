@@ -1,95 +1,95 @@
-<?
-	/*
-	//sacamos los datos del usuario para ver si tiene acceso a esta parte
-	$nivel_usuario=$_COOKIE['nivel'];
-	//echo $nivel;
-	//niveles de acceso a esta pagina
-	$nivel_pag=array(0,1,3);
-	for($i=0;$i<count($nivel_pag);$i++){
-		//comparamos el nivel del usuario
-		if(!in_array($nivel_usuario,$nivel_pag)){
-		?>
-			<script language="javascript">
-				alert('Este modulo se encuentra en mantenimiento');
-				history.back();
-			</script>
-		<?
-		}
-	}
-	*/
-?>
-<script language="javascript" src="javascript/ajax_rep.js"></script>
-<script language="javascript" src="javascript/funciones.js"></script>
-<style type="text/css">
-<!--
-.style1 {color: #000000;font-size: 12px;font-family: Verdana, Arial, Helvetica, sans-serif;}
-.style2 {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 9px;color: #999999;}
-.style3 {color: #FFFFFF}
-a:link {color: #666666;text-decoration: none;}
-a:visited {text-decoration: none;color: #666666;}
-a:hover {text-decoration: underline;color: #CCCCCC;}
-a:active {text-decoration: none;color: #666666;}
-.style4 {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 12px;color: #FFFFFF;}
-.style7 {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; }
-.style8 {color: #990000}
-.style11 {color: #000000;font-weight: bold;}
-.style5 {font-family: Geneva, Arial, Helvetica, sans-serif; font-weight: bold; font-size: 16px; }
-.Estilo50 {color: #FFFFFF}
-.style8 {color: #FFFFFF; font-family: Verdana, Arial, Helvetica, sans-serif; }
-.style10 {font-size: 12px}
-.style11 {color: #990000}
-.style12 {color: #000099}
-.style13 {color: #993333}
-.Estilo52 {font-family: Arial, Helvetica, sans-serif;font-size: 14px;color: #000000;}
-/*esquinas*/
-.roundedcornr_box_603736 {background: url(../img/esquinas/roundedcornr_603736_tl.png) no-repeat top left;}
-.roundedcornr_top_603736 {background: url(../img/esquinas/roundedcornr_603736_tr.png) no-repeat top right;}
-.roundedcornr_bottom_603736 {background: url(../img/esquinas/roundedcornr_603736_bl.png) no-repeat bottom left;}
-.roundedcornr_bottom_603736 div {background: url(../img/esquinas/roundedcornr_603736_br.png) no-repeat bottom right;}
-.roundedcornr_content_603736 {background: url(../img/esquinas/roundedcornr_603736_r.png) top right repeat-y;}
-.roundedcornr_top_603736 div,.roundedcornr_top_603736,
-.roundedcornr_bottom_603736 div, .roundedcornr_bottom_603736 {width: 100%;height: 10px;font-size: 1px;}
-.roundedcornr_content_603736, .roundedcornr_bottom_603736 {margin-top: -19px;}
-.roundedcornr_content_603736 { padding: 0 10px; }
-/*otro rectangulo*/
-.roundedcornr_box_327247 {background: url(../img/img_r/roundedcornr_327247_tl.png) no-repeat top left;}
-.roundedcornr_top_327247 {background: url(../img/img_r/roundedcornr_327247_tr.png) no-repeat top right;}
-.roundedcornr_bottom_327247 {background: url(../img/img_r/roundedcornr_327247_bl.png) no-repeat bottom left;}
-.roundedcornr_bottom_327247 div {background: url(../img/img_r/roundedcornr_327247_br.png) no-repeat bottom right;}
-.roundedcornr_content_327247 {background: url(../img/img_r/roundedcornr_327247_r.png) top right repeat-y;}
-.roundedcornr_top_327247 div,.roundedcornr_top_327247,
-.roundedcornr_bottom_327247 div, .roundedcornr_bottom_327247 {width: 100%;	height: 15px;
-	font-size: 1px;
-}
-.roundedcornr_content_327247, .roundedcornr_bottom_327247 {
-	margin-top: -19px;
-}
-.roundedcornr_content_327247 { padding: 0 15px; }
-.Estilo53 {font-family: Verdana, Arial, Helvetica, sans-serif;font-weight: bold;}
-.colorNegro{color:#000;}
-.divBtn{font-size: 12px;width: 145px;height: 15px;padding: 5px;background: #f0f0f0;border: 1px solid #CCC;}
-.divBtn:hover{background: #e1e1e1;cursor: pointer;}
-/**/
--->
-</style>
-
-<div style="margin: 0px;">
-
-<table width="100%" border="0" cellspacing="">
+<!--<table width="100%" border="0" cellspacing="0">
   <tr>
-    <td style="text-align: center;height: 15px;padding: 5px;background: #f0f0f0;border: 1px solid #CCC;"><a href="javascript:cargarInformacion()" class="Estilo52"><span class="colorNegro"><strong>Listar Equipos a Reparar</strong></span></a></td>
+    <td bgcolor="#666666"><div align="center" class="style8"><span class="style10"><a href="regeqpo.php?action=nuevo">Registro de Equipo</a> | <a href="findeqp.php">Buscar Equipos</a> | <a href="asignaeqpo.php">Asignar Equipos</a></span></div></td>
   </tr>
 </table>
-<div class="divBtn" onclick="cargarInformacion()">Listar Equipos a Reparar</div>
-
-
-<span id="texto" name="texto">
-<p align="center" style="margin-top: 10%;">Reparacion de Equipos</p>
-</span>
-<span name="texto">
-</span>
-
-<p class="style13">&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p align="center" class="style5">Recibo de Equipos</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 <hr />
-<p align="center" class="style2">IQelectronics SA de CV &copy;</p>
+<p align="center" class="Estilo1">IQelectronics-->
+<?
+	session_start();
+	//print_r($_SESSION);
+	include("../../includes/cabecera.php");
+	$proceso="";	
+	/*if(!isset($_SESSION['id_usuario_nx'])){
+		echo "<script type='text/javascript'> alert('Su sesion ha terminado por inactividad'); window.location.href='../mod_login/index.php'; </script>";
+		exit;
+	}else{
+		if($proceso != ""){			
+			$sqlProc="SELECT * FROM cat_procesos WHERE descripcion='".$proceso."'";
+			$resProc=mysql_query($sqlProc,conectarBd());
+			$rowProc=mysql_fetch_array($resProc);
+			$proceso=$rowProc['id_proc'];
+		}
+	}*/	
+	function conectarBd(){
+		require("../../includes/config.inc.php");
+		$link=mysql_connect($host,$usuario,$pass);
+		if($link==false){
+			echo "Error en la conexion a la base de datos";
+		}else{
+			mysql_select_db($db);
+			return $link;
+		}				
+	}
+?>
+<script type="text/javascript" src="js/funcionesEnsamble.js"></script>
+<script type="text/javascript" src="../../clases/jquery-1.3.2.min.js"></script>
+<!--se incluyen los recursos para el grid-->
+<script type="text/javascript" src="../../recursos/grid/grid.js"></script>
+<link rel="stylesheet" type="text/css" href="../../recursos/grid/grid.css" />
+<!--fin inclusion grid-->
+
+<link rel="stylesheet" type="text/css" media="all" href="css/estilos.css" />  
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		redimensionar();		
+	});	
+	function redimensionar(){
+		var altoDiv=$("#contenedorEnsamble3").height();
+		var anchoDiv=$("#contenedorEnsamble3").width();
+		var altoCuerpo=altoDiv-52;
+		$("#detalleEmpaque").css("height",altoCuerpo+"px");
+		$("#ventanaEnsambleContenido2").css("height",altoCuerpo+"px");
+		$("#detalleEmpaque").css("width",(anchoDiv-5)+"px");
+		$("#ventanaEnsambleContenido2").css("width",(anchoDiv-200)+"px");
+		$("#infoEnsamble3").css("height",altoCuerpo+"px");
+	}	
+	window.onresize=redimensionar;	
+</script>
+<!--<div id="cargadorEmpaque" class="cargadorEmpaque">Cargando...</div>-->
+<input type="hidden" name="txtProcesoEmpaque" id="txtProcesoEmpaque" value="<?=$proceso;?>" />
+<input type="hidden" name="txtIdUsuarioReparacion" id="txtIdUsuarioReparacion" value="<?=$_SESSION['idUsuarioBounce'];?>" />
+<div id="contenedorEnsamble">
+	<div id="contenedorEnsamble3">
+		<div id="barraOpcionesEnsamble">
+			<div class="opcionesEnsamble" onclick="listarEquiposReparar('<?=$_SESSION['idUsuarioBounce'];?>')" title="">Listar Equipos a Reparar</div>			
+			<div id="cargadorEmpaque" style="float:right;width:200px;height:20px;padding:5px;background:#FFF;border:1px solid #CCC;font-size:13px;text-align:right;"></div>
+		</div>
+		<!--<div id="infoEnsamble3">			
+			<div id="listadoEmpaque" style="border:1px solid #e1e1e1;background:#fff; height:99%;width:97%;font-size:12px;margin:3px;overflow: auto;"></div>			
+		</div>-->
+		<div id="detalleEmpaque" class="ventanaEnsambleContenido"></div>
+		<div id="ventanaEnsambleContenido2" class="ventanaEnsambleContenido" style="display:none;"></div>
+		<div style="clear:both;"></div>
+		<!--<div id="barraInferiorEnsamble">			
+			<div id="erroresCaptura"></div>
+			<div id="opcionCancelar"><input type="button" onclick="cancelarCaptura()" value="Cancelar" style=" width:100px; height:30px;padding:5px;background:#FF0000;color:#FFF;border:1px solid #FF0000;font-weight:bold;" /></div>
+		</div>-->
+	</div>
 </div>
+<div id="transparenciaGeneral1" class="transparenciaGeneral" style="display:none;">
+	<div id="divMensajeCaptura" class="ventanaDialogo">
+		<div id="barraTitulo1VentanaDialogoValidacion" class="barraTitulo1VentanaDialogoValidacion">Informaci&oacute;n<div id="btnCerrarVentanaDialogo"><a href="#" onclick="cerrarVentana('divMensajeCaptura')" title="Cerrar Ventana"><img src="../../img/close.gif" border="0" /></a></div></div>
+		<div id="listadoEmpaqueValidacion" style="border:1px solid #CCC; margin:4px; font-size:10px;height:93%; overflow:auto;"></div>
+	</div>
+</div>	
+<?
+include ("../../includes/pie.php");
+?>

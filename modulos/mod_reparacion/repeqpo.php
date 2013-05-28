@@ -5,6 +5,17 @@
     session_start();
 	// Paranoia: decimos al navegador que no "cachee" esta página.
     session_cache_limiter('nocache,private');
+    
+	function conectarBd(){
+		require("../../includes/config.inc.php");
+		$link=mysql_connect($host,$usuario,$pass);
+		if($link==false){
+		    echo "Error en la conexion a la base de datos";
+		}else{
+		    mysql_select_db($db);
+		    return $link;
+		}				
+	}
 ?>	
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -14,78 +25,27 @@
 <link type="text/css" rel="stylesheet" href="calendar.css">
 <style type="text/css">
 <!--
-body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-}
-.Estilo1 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	font-weight: bold;
-}
-.style1 {
-	color: #000000;
-	font-size: 12px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-.style2 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 9px;
-	color: #999999;
-}
-a:link {
-	color: #000000;
-	text-decoration: none;
-}
-a:visited {
-	text-decoration: none;
-	color: #000000;
-}
-a:hover {
-	text-decoration: underline;
-	color: #CCCCCC;
-}
-a:active {
-	text-decoration: none;
-	color: #000000;
-}
-.style4 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #FFFFFF;
-}
+body {	margin: 0px;}
+.Estilo1 {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 12px;font-weight: bold;}
+.style1 {color: #000000;font-size: 12px;font-family: Verdana, Arial, Helvetica, sans-serif;}
+.style2 {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 9px;color: #999999;}
+a:link {color: #000000;text-decoration: none;}
+a:visited {text-decoration: none;color: #000000;}
+a:hover {text-decoration: underline;color: #CCCCCC;}
+a:active {text-decoration: none;color: #000000;}
+.style4 {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 12px;color: #FFFFFF;}
 .style7 {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; }
 .style8 {color: #990000}
 .style13 {font-size: 9px}
 .style14 {color: #FFFFFF}
 /*esquinas*/
-.roundedcornr_box_603736 {
-	background: url(../img/esquinas/roundedcornr_603736_tl.png) no-repeat top left;
-}
-.roundedcornr_top_603736 {
-	background: url(../img/esquinas/roundedcornr_603736_tr.png) no-repeat top right;
-}
-.roundedcornr_bottom_603736 {
-	background: url(../img/esquinas/roundedcornr_603736_bl.png) no-repeat bottom left;
-}
-.roundedcornr_bottom_603736 div {
-	background: url(../img/esquinas/roundedcornr_603736_br.png) no-repeat bottom right;
-}
-.roundedcornr_content_603736 {
-	background: url(../img/esquinas/roundedcornr_603736_r.png) top right repeat-y;
-}
-
-.roundedcornr_top_603736 div,.roundedcornr_top_603736,
-.roundedcornr_bottom_603736 div, .roundedcornr_bottom_603736 {
-	width: 100%;
-	height: 10px;
-	font-size: 1px;
-}
-.roundedcornr_content_603736, .roundedcornr_bottom_603736 {
-	margin-top: -19px;
-}
+.roundedcornr_box_603736 {background: url(../img/esquinas/roundedcornr_603736_tl.png) no-repeat top left;}
+.roundedcornr_top_603736 {background: url(../img/esquinas/roundedcornr_603736_tr.png) no-repeat top right;}
+.roundedcornr_bottom_603736 {background: url(../img/esquinas/roundedcornr_603736_bl.png) no-repeat bottom left;}
+.roundedcornr_bottom_603736 div {background: url(../img/esquinas/roundedcornr_603736_br.png) no-repeat bottom right;}
+.roundedcornr_content_603736 {background: url(../img/esquinas/roundedcornr_603736_r.png) top right repeat-y;}
+.roundedcornr_top_603736 div,.roundedcornr_top_603736,.roundedcornr_bottom_603736 div, .roundedcornr_bottom_603736 {width: 100%;height: 10px;font-size: 1px;}
+.roundedcornr_content_603736, .roundedcornr_bottom_603736 {margin-top: -19px;}
 .roundedcornr_content_603736 { padding: 0 10px; }
 /*otro rectangulo*/
 .roundedcornr_box_327247 {
@@ -206,10 +166,10 @@ onmouseout="this.style.backgroundColor=anterior" />
 	if(!x==false){
 	
 	}
-	include("../php/conectarbase.php");
+	
 	$sql="SELECT equiposrep.*,codfallas.descripcion FROM equiposrep, codfallas WHERE (esn='$esn' and codfallas.codigo=equiposrep.diag1) and ot='$ot'";
 	//echo $sql;
-	$result=mysql_db_query("db_iqe_ref",$sql);
+	$result=mysql_query($sql,conectarbd());
 	$row=mysql_fetch_array($result);
 	$num_rows = mysql_num_rows($result);
 	//numero de orden
@@ -305,7 +265,7 @@ onmouseout="this.style.backgroundColor=anterior" />
 	//realizar verificacion hacia la base de datos
 	//cuadro en caso que se haya regresado un equipo a reparacion
 	$sqlx="select * from pruebas where ot='$ot' and status='NOK'";
-	$resultx=mysql_db_query('db_iqe_ref',$sqlx);
+	$resultx=mysql_query($sqlx,conectarBd());
 	do{
 		$status_calidad=$fila['status'];
 		$observaciones=$fila['observaciones'];
@@ -377,7 +337,7 @@ onmouseout="this.style.backgroundColor=anterior" />
 			  <?
 			  	$sql="SELECT * from equiposrep where esn='$esn' and ot='$ot'";
 				//echo $SQL;
-				$result2=mysql_db_query("db_iqe_ref",$sql);
+				$result2=mysql_query($sql,conectarBd());
 				$row1=mysql_fetch_array($result2);
 			  ?>
                 <select name="status" id="status">

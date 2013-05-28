@@ -19,6 +19,14 @@
     $res=mysql_query($sql,conectarBd());
     
     if($res){
+        $resUID=mysql_query("SELECT LAST_INSERT_ID() as nreg",conectarBd());
+        $rowUID=mysql_fetch_array($resUID);
+        $nreg=$rowUID["nreg"];
+        $fiq="IQR".date('ym').sprintf('%05s',$nreg);
+        //echo $fiq;
+        $sqlOt="UPDATE equiposrep SET ot='$fiq' WHERE id='$nreg'";
+        $res=mysql_query($sqlOt,conectarBd());
+        
         //se busca la diferencia para obtener la garantia del equipo
         $sqlGarantia="SELECT DATEDIFF('".$fecharec."','".$activacion."') AS garantia";
         $resGarantia=mysql_query($sqlGarantia,conectarBd());
