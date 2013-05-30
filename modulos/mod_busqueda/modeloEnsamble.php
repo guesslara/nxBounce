@@ -1,5 +1,5 @@
 <?
-	include("../../clases/funcionesComunes.php");
+	//include("../../clases/funcionesComunes.php");
 	class modeloEnsamble{
 		
 		private function conectarBd(){
@@ -46,347 +46,112 @@
 		}
 		
 		public function buscarEquipo2($imei,$filtro){
-			$objFunciones=new funcionesComunes();
-			$sqlBuscar="select * from equipos where ".$filtro."='".$imei."'";
+			($filtro=="serial") ? $filtro="esn" : $filtro="imei";
+			//$objFunciones=new funcionesComunes();
+			$sqlBuscar="select * from equiposrep where ".$filtro."='".$imei."'";
 			$resBuscar=mysql_query($sqlBuscar,$this->conectarBd());
 			//filtro para buscar en equipos enviados
-			$sqlBuscar1="select * from equipos_enviados where ".$filtro."='".$imei."'";
-			$resBuscar1=mysql_query($sqlBuscar1,$this->conectarBd());
-			if(mysql_num_rows($resBuscar)==0 && mysql_num_rows($resBuscar1)==0){
-				echo "<div style='margin-top:20px;border-top:1px solid #FF0000;border-bottom:1px solid #FF0000;background:#F5A9A9;height:20px;padding:9px;'>Error: imei ($imei) no encontrado en la Base de Datos.</div>";
-			}else{
-				if($filtro=="imei"){
-					$regsNoEnviar=$objFunciones->buscarNoEnviar($imei); $campo="imei";
-				}else if($filtro=="serial"){
-					$regsNoEnviar=$objFunciones->buscarSerieNoEnviar($imei); $campo="serial";
-				}
+			//$sqlBuscar1="select * from equipos_enviados where ".$filtro."='".$imei."'";
+			//$resBuscar1=mysql_query($sqlBuscar1,$this->conectarBd());
+			if(mysql_num_rows($resBuscar)==0 ){
+				echo "<div style='margin-top:20px;border-top:1px solid #FF0000;border-bottom:1px solid #FF0000;background:#F5A9A9;height:20px;padding:9px;'>Error: ".$filtro." ($imei) no encontrado en la Base de Datos.</div>";
+			}else{				
 ?>
-						<style type="text/css">
-						.estiloTitulosDatos{background: #f0f0f0;border: 1px solid #CCC; height: 20px;padding: 5px;font-weight: bold;font-size: 10px;text-align: left;}
-						.estiloDatosBusqueda{border-bottom: 1px solid #CCC;text-align: left;font-size: 10px;border-right: 1px solid #CCC;}
-						.divCajaPrincipal{width: 600px;margin: 0 auto 0 auto;height: auto;background: #FFF;border: 1px solid #CCC;}
-						.divCajaPrincipalTitulo{position: relative; width: 200px;height: 25px;padding: 5px;background: #f0f0f0;border: 1px solid #a4a4a4;top: -15px;left:20px;text-align: left;color:#2E2E2E;font-weight: bold;font-size: 12px;}
-						.divAdvertencia{margin-top:3px;height:20px;padding: 6px;background: #F3F781;border-bottom: 1px solid #FF8000;border-top:1px solid #FF8000;color: red;}
-						.divNoReg{margin-top:3px;height:20px;padding: 6px;background: #82FA58;border: 1px solid green;margin: 0 auto 0 auto;width: 600px;margin-top: 5px;}
-						</style>
+				<style type="text/css">
+				.estiloTitulosDatos{background: #f0f0f0;border: 1px solid #CCC; height: 20px;padding: 5px;font-weight: bold;font-size: 10px;text-align: left;}
+				.estiloDatosBusqueda{border-bottom: 1px solid #CCC;text-align: left;font-size: 10px;border-right: 1px solid #CCC;}
+				.divCajaPrincipal{width: 600px;margin: 0 auto 0 auto;height: auto;background: #FFF;border: 1px solid #CCC;}
+				.divCajaPrincipalTitulo{position: relative; width: 200px;height: 25px;padding: 5px;background: #f0f0f0;border: 1px solid #a4a4a4;top: -15px;left:20px;text-align: left;color:#2E2E2E;font-weight: bold;font-size: 12px;}
+				.divAdvertencia{margin-top:3px;height:20px;padding: 6px;background: #F3F781;border-bottom: 1px solid #FF8000;border-top:1px solid #FF8000;color: red;}
+				.divNoReg{margin-top:3px;height:20px;padding: 6px;background: #82FA58;border: 1px solid green;margin: 0 auto 0 auto;width: 600px;margin-top: 5px;}
+				</style>
 <?
-				if($regsNoEnviar==0){
-					$sqlEquipos="SELECT * FROM equipos inner join cat_modradio on equipos.id_modelo=cat_modradio.id_modelo where ".$campo."='".$imei."'";
-					$sqlEquiposEnv="SELECT * FROM equipos_enviados inner join cat_modradio on equipos_enviados.id_modelo=cat_modradio.id_modelo where ".$campo."='".$imei."'";
-					$resEquipos=mysql_query($sqlEquipos,$this->conectarBd());
-					$resEquiposEnv=mysql_query($sqlEquiposEnv,$this->conectarBd());
-					$rowEquipos=mysql_fetch_array($resEquipos);
-					//$rowEquiposEnv=mysql_fetch_array($resEquiposEnv);
-					$regsEncontrados=mysql_num_rows($resEquipos)+mysql_num_rows($resEquiposEnv);
-					//se busca el imei en la tabla empaque items
-					$sqlPrevio="select * from empaque_items where ".$campo."='".$imei."'";
-					$resPrevio=mysql_query($sqlPrevio,$this->conectarBd());
-					$rowPrevio=mysql_fetch_array($resPrevio);
-					echo "<div class='divNoReg'>Registros encontrados: ".$regsEncontrados."</div>";
-					//consulta para la bitacora
-					$sqlBitacora="SELECT id_detalle, id_radio, f_registro, h_registro, descripcion, nombre, apaterno FROM (detalle_ing INNER JOIN cat_procesos ON detalle_ing.id_proc = cat_procesos.id_proc) INNER JOIN userdbnextel ON detalle_ing.id_personal = userdbnextel.ID where id_radio='".$rowEquipos['id_radio']."'";
-					$resBitacora=mysql_query($sqlBitacora,$this->conectarBd());
-					//$rowBitacora=mysql_fetch_array($resBitacora);
-					if(mysql_num_rows($resEquipos) != 0){
+				
+				$sqlEquipos="SELECT * FROM equiposrep where ".$filtro."='".$imei."' ORDER BY id DESC";				
+				$resEquipos=mysql_query($sqlEquipos,$this->conectarBd());				
+				//$rowEquipos=mysql_fetch_array($resEquipos);				
+				$regsEncontrados=mysql_num_rows($resEquipos);				
+				
+				echo "<div class='divNoReg'>Registros encontrados: ".$regsEncontrados."</div>";
+				//consulta para la bitacora
+				//$sqlBitacora="SELECT id_detalle, id_radio, f_registro, h_registro, descripcion, nombre, apaterno FROM (detalle_ing INNER JOIN cat_procesos ON detalle_ing.id_proc = cat_procesos.id_proc) INNER JOIN userdbnextel ON detalle_ing.id_personal = userdbnextel.ID where id_radio='".$rowEquipos['id_radio']."'";
+				//$resBitacora=mysql_query($sqlBitacora,$this->conectarBd());
+				//$rowBitacora=mysql_fetch_array($resBitacora);
+				if(mysql_num_rows($resEquipos) != 0){
+					while($rowEquipos=mysql_fetch_array($resEquipos)){
 ?>
-						<div style="clear: both;margin-bottom: 10px;">&nbsp;</div>
-						<div class="divCajaPrincipal">
-							<div class="divCajaPrincipalTitulo">Equipo en Proceso</div>
-							<table width="90%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-								<tr>
-									<td width="28%" class="estiloTitulosDatos">Imei</td>
-									<td width="35%" class="estiloDatosBusqueda" style="border-top:1px solid #CCC;"><span id="datos_imei"><?=$rowEquipos['imei'];?></span></td>
-									<td width="35%" align="center" class="estiloTitulosDatos">Modelo</td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Serie</td>
-									<td class="estiloDatosBusqueda"><span id="datos_serial"><?=strtoupper($rowEquipos['serial']);?></span></td>
-									<td rowspan="7"><div style="margin: 0 auto 0 auto; width: 150px;border:1px solid #CCC; background:#f0f0f0; height:60px; font-size:36px; text-align:center; padding:15px;"><?=$rowEquipos['modelo'];?></div></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Sim</td>
-									<td class="estiloDatosBusqueda"><span id="datos_serial"><?=strtoupper($rowEquipos['sim']);?></span></td>									
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Folio</td>
-									<td class="estiloDatosBusqueda"><span id="datos_lote"><?=$rowEquipos['lote'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">MFGDate</td>
-									<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowEquipos['mfgdate'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Movimiento</td>
-									<td class="estiloDatosBusqueda"><span id="datos_movimiento"><?=$rowEquipos['num_movimiento'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">L&iacute;nea</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquipos['lineaEnsamble'];?></span></td>											
-								</tr>								
-							</table><br>
-						</div>	
-						<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
-						<div class="divCajaPrincipal">	
-							<div class="divCajaPrincipalTitulo">Control Interno:</div>
-							<table width="90%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-								<tr>
-									<td width="28%" class="estiloTitulosDatos">Status</td>
-									<td width="70%" class="estiloDatosBusqueda" style="border-top:1px solid #CCC;"><span id="datos_imei"><?=$rowEquipos['status'];?></span></td>									
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Proceso</td>
-									<td class="estiloDatosBusqueda"><span id="datos_serial"><?=$rowEquipos['statusProceso'];?></span></td>									
-								</tr>								
-								<tr>
-									<td class="estiloTitulosDatos">Status Desensamble</td>
-									<td class="estiloDatosBusqueda"><span id="datos_lote"><?=$rowEquipos['statusDesensamble'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Diagnostico</td>
-									<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowEquipos['statusDiagnostico'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Almac&eacute;n</td>
-									<td class="estiloDatosBusqueda"><span id="datos_movimiento"><?=$rowEquipos['statusAlmacen'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Ingenier&iacute;a</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquipos['statusIngenieria'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Empaque</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquipos['statusEmpaque'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status IQ</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquipos['statusIQ'];?></span></td>											
-								</tr>
-							</table><br>
-						</div>	
-							<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
-						<div class="divCajaPrincipal">	
-							<div class="divCajaPrincipalTitulo">Envio Previo:</div>
-							<table width="90%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-								<tr>
-									<td width="28%" class="estiloTitulosDatos">Empaque interno</td>
-									<td width="70%" class="estiloDatosBusqueda" style="border-top:1px solid #CCC;"><span id="datos_imei"><?=$rowPrevio["id_empaque"];?></span></td>									
-								</tr>								
-							</table><br>
-							<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-						</div>	
-							<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
-						<div class="divCajaPrincipal">
-							<div class="divCajaPrincipalTitulo">Bit&aacute;cora del equipo:</div>
-								<table width="90%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-<?
-						while($rowBitacora=mysql_fetch_array($resBitacora)){
-							$fechaB=explode("-",$rowBitacora['f_registro']);						
-							$diaSeg=date("w",mktime(0,0,0,$fechaB[1],$fechaB[2],$fechaB[0]));
-							$mesSeg=date("n",mktime(0,0,0,$fechaB[1],$fechaB[2],$fechaB[0]));
-							$dias= array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","S&aacute;bado");
-							$meses= array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");//<?=$rowBitacora["descripcion"].$rowBitacora["f_registro"];>
-							$mensajes[0]="";
-?>
-							
-									<tr>
-										<td class="estiloTitulosDatos">El <?=$dias[$diaSeg]." ".$fechaB[2]." de ".$meses[$mesSeg-1]." de ".$fechaB[0]." a las: ".$rowBitacora["h_registro"];?></td>
-									</tr>
-									<tr>
-										<td class="estiloDatosBusqueda" style="border-left:1px solid #CCC;">&nbsp;<?=$rowBitacora["nombre"]." ".$rowBitacora["apaterno"]." --- ".$rowBitacora["descripcion"];?></td>
-									</tr>
-<?
-						}
-?>
-								</table>
-							<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-						</div>	
-							<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-							<div style="border: 1px dashed #999;"></div>
-							<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
+					<div style="clear: both;margin-bottom: 10px;">&nbsp;</div>
+					<div class="divCajaPrincipal">
+						<div class="divCajaPrincipalTitulo">Equipo en Proceso</div>
+						<table width="90%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
+							<tr>
+								<td width="28%" class="estiloTitulosDatos">Imei</td>
+								<td width="35%" class="estiloDatosBusqueda" style="border-top:1px solid #CCC;"><span id="datos_imei"><?=$rowEquipos['imei'];?></span></td>
+								<td width="35%" align="center" class="estiloTitulosDatos">Modelo</td>											
+							</tr>
+							<tr>
+								<td class="estiloTitulosDatos">Serie</td>
+								<td class="estiloDatosBusqueda"><span id="datos_serial"><?=strtoupper($rowEquipos['esn']);?></span></td>
+								<td rowspan="7"><div style="margin: 0 auto 0 auto; width: 150px;border:1px solid #CCC; background:#f0f0f0; height:60px; font-size:36px; text-align:center; padding:15px;"><?=$rowEquipos['modelo'];?></div></td>											
+							</tr>
+							<tr>
+								<td class="estiloTitulosDatos">Sim</td>
+								<td class="estiloDatosBusqueda"><span id="datos_serial"><?=strtoupper($rowEquipos['sim']);?></span></td>									
+							</tr>
+							<tr>
+								<td class="estiloTitulosDatos"># Gu&iacute;a</td>
+								<td class="estiloDatosBusqueda"><span id="datos_lote"><?=$rowEquipos['fnextel'];?></span></td>											
+							</tr>
+							<tr>
+								<td class="estiloTitulosDatos">MFGDate</td>
+								<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowEquipos['mfgdate'];?></span></td>											
+							</tr>
+							<tr>
+								<td class="estiloTitulosDatos">Fecha Activaci&oacute;n</td>
+								<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowEquipos['fecha_activacion'];?></span></td>
+							</tr>
+							<tr>
+								<td class="estiloTitulosDatos">Clasificaci&oacute;n</td>
+								<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowEquipos['clasificacion'];?></span></td>
+							</tr>
+						</table><br>
+					</div>	
+					<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
+					<div class="divCajaPrincipal">	
+						<div class="divCajaPrincipalTitulo">Control Interno:</div>
+						<table width="90%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
+							<tr>
+								<td width="28%" class="estiloTitulosDatos">Status</td>
+								<td width="70%" class="estiloDatosBusqueda" style="border-top:1px solid #CCC;"><span id="datos_imei"><?=$rowEquipos['status'];?></span></td>									
+							</tr>
+							<tr>
+								<td class="estiloTitulosDatos">Status Reparaci&oacute;n</td>
+								<td class="estiloDatosBusqueda"><span id="datos_serial"><?=$rowEquipos['status_rep'];?></span></td>									
+							</tr>								
+							<tr>
+								<td class="estiloTitulosDatos">Status A. Calidad</td>
+								<td class="estiloDatosBusqueda"><span id="datos_lote"><?=$rowEquipos['status_cc'];?></span></td>											
+							</tr>
+							<tr>
+								<td class="estiloTitulosDatos">Status Empaque</td>
+								<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowEquipos['status_despacho'];?></span></td>											
+							</tr>							
+						</table><br>
+					</div>	
+					<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
+					<div class="divCajaPrincipal">	
+						<div class="divCajaPrincipalTitulo">Envio Previo:</div>
+						<table width="90%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
+							<tr>
+								<td width="28%" class="estiloTitulosDatos">Empaque interno</td>
+								<td width="70%" class="estiloDatosBusqueda" style="border-top:1px solid #CCC;"><span id="datos_imei"><?=$rowPrevio["id_empaque"];?></span></td>									
+							</tr>								
+						</table><br>
+						<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
+					</div>	
+					<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
 						
-						<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-<?
-					}
-					if(mysql_num_rows($resEquiposEnv)!=0){						
-						while($rowEquiposEnv=mysql_fetch_array($resEquiposEnv)){
-							//consulta para la bitacora
-							$sqlBitacoraEnv="SELECT id_detalle, id_radio, f_registro, h_registro, descripcion, nombre, apaterno FROM (detalle_ing INNER JOIN cat_procesos ON detalle_ing.id_proc = cat_procesos.id_proc) INNER JOIN userdbnextel ON detalle_ing.id_personal = userdbnextel.ID where id_radio='".$rowEquiposEnv['id_radio']."'";
-							$resBitacoraEnv=mysql_query($sqlBitacoraEnv,$this->conectarBd());
-?>						
-						<div style="clear: both;margin-bottom: 10px;">&nbsp;</div>
-						<div class="divCajaPrincipal">
-							<div class="divCajaPrincipalTitulo" style="font-weight: bold;font-size: 12px;">Datos del Equipo ENVIADO</div>
-							<table width="98%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-								<tr>
-									<td width="28%" class="estiloTitulosDatos">Imei</td>
-									<td width="35%" class="estiloDatosBusqueda"><span id="datos_imei"><?=$rowEquiposEnv['imei'];?></span></td>
-									<td width="35%" align="center" class="estiloTitulosDatos">Modelo</td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Serie</td>
-									<td class="estiloDatosBusqueda"><span id="datos_serial"><?=$rowEquiposEnv['serial'];?></span></td>
-									<td rowspan="7"><div style="margin: 0 auto 0 auto; width: 150px;border:1px solid #CCC; background:#f0f0f0; height:60px; font-size:36px; text-align:center; padding:15px;"><?=$rowEquiposEnv['modelo'];?></div></td>											
-								</tr>								
-								<tr>
-									<td class="estiloTitulosDatos">Folio</td>
-									<td class="estiloDatosBusqueda"><span id="datos_lote"><?=$rowEquiposEnv['lote'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">MFGDate</td>
-									<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowEquiposEnv['mfgdate'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Movimiento</td>
-									<td class="estiloDatosBusqueda"><span id="datos_movimiento"><?=$rowEquiposEnv['num_movimiento'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquiposEnv['status'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Proceso</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquiposEnv['statusProceso'];?></span></td>											
-								</tr>
-							</table>
-							<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-						</div>
-						<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
-						<div class="divCajaPrincipal">	
-							<div class="divCajaPrincipalTitulo">Control Interno:</div>
-							<table width="98%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-								<tr>
-									<td width="28%" class="estiloTitulosDatos">Status</td>
-									<td width="70%" class="estiloDatosBusqueda"><span id="datos_imei"><?=$rowEquiposEnv['status'];?></span></td>									
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Proceso</td>
-									<td class="estiloDatosBusqueda"><span id="datos_serial"><?=$rowEquiposEnv['statusProceso'];?></span></td>									
-								</tr>								
-								<tr>
-									<td class="estiloTitulosDatos">Status Desensamble</td>
-									<td class="estiloDatosBusqueda"><span id="datos_lote"><?=$rowEquiposEnv['statusDesensamble'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Diagnostico</td>
-									<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowEquiposEnv['statusDiagnostico'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Almac&eacute;n</td>
-									<td class="estiloDatosBusqueda"><span id="datos_movimiento"><?=$rowEquiposEnv['statusAlmacen'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Ingenier&iacute;a</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquiposEnv['statusIngenieria'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Empaque</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquiposEnv['statusEmpaque'];?></span></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status IQ</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowEquiposEnv['statusIQ'];?></span></td>											
-								</tr>
-							</table>
-							<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-						</div>
-						<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
-						<div class="divCajaPrincipal">
-							<div class="divCajaPrincipalTitulo">Informaci&oacute;n del Envio:</div>
-							<table width="98%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-								<tr>
-									<td width="28%" class="estiloTitulosDatos">Entrega</td>
-									<td width="70%" class="estiloDatosBusqueda"><span id="datos_imei"><?=$rowEquiposEnv['envioIq'];?></span></td>									
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Destino</td>
-									<td class="estiloDatosBusqueda"><span id="datos_serial"><?=$rowEquiposEnv['destino'];?></span></td>									
-								</tr>																
-							</table>
-							<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-						</div>
-						<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
-						<div class="divCajaPrincipal">
-							<div class="divCajaPrincipalTitulo">Bit&aacute;cora del equipo:</div>
-								<table width="90%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-<?
-						while($rowBitacoraEnv=mysql_fetch_array($resBitacoraEnv)){
-							$fechaB=explode("-",$rowBitacoraEnv['f_registro']);						
-							$diaSeg=date("w",mktime(0,0,0,$fechaB[1],$fechaB[2],$fechaB[0]));
-							$mesSeg=date("n",mktime(0,0,0,$fechaB[1],$fechaB[2],$fechaB[0]));
-							$dias= array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","S&aacute;bado");
-							$meses= array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");//<?=$rowBitacora["descripcion"].$rowBitacora["f_registro"];>
-							$mensajes[0]="";
-?>
-							
-									<tr>
-										<td class="estiloTitulosDatos">El <?=$dias[$diaSeg]." ".$fechaB[2]." de ".$meses[$mesSeg-1]." de ".$fechaB[0]." a las: ".$rowBitacoraEnv["h_registro"];?></td>
-									</tr>
-									<tr>
-										<td class="estiloDatosBusqueda" style="border-left:1px solid #CCC;">&nbsp;<?=$rowBitacoraEnv["nombre"]." ".$rowBitacoraEnv["apaterno"]." --- ".$rowBitacoraEnv["descripcion"];?></td>
-									</tr>
-<?
-						}
-?>
-								</table>
-							<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-						</div>
-						<div style="clear: both;margin-bottom: 15px;">&nbsp;</div>
-<?
-						}
-					}	
-				}else{
-					$sqlNoEnviar="SELECT * FROM equipos_no_enviar WHERE ".$campo."='".$imei."'"; //INNER JOIN cat_modradio ON equipos.id_modelo=cat_modradio.id_modelo WHERE ".$campo."='".$imei."'";
-					$resNoEnviar=mysql_query($sqlNoEnviar,$this->conectarBd());
-					echo "<div class='divNoReg'>Registros encontrados: ".mysql_num_rows($resNoEnviar)."</div>";
-					while($rowNoEnviar=mysql_fetch_array($resNoEnviar)){
-						$sqlDatos="SELECT lote,mfgdate,num_movimiento,status,statusProceso FROM equipos WHERE ".$campo."='".$imei."'";
-						$resDatos=mysql_query($sqlDatos,$this->conectarBd());						
-						if(mysql_num_rows($resDatos)==0){
-							$sqlDatos="SELECT lote,mfgdate,num_movimiento,status,statusProceso FROM equipos_enviados WHERE ".$campo."='".$imei."'";
-							$resDatos=mysql_query($sqlDatos,$this->conectarBd());
-						}else{
-							$resDatos=mysql_query($sqlDatos,$this->conectarBd());
-						}
-						$rowDatos=mysql_fetch_array($resDatos);
-?>						
-						<div class="divAdvertencia">Equipo clasificado como <span style="font-weight: bold;">NO ENVIAR</span> retirelo y entreguelo al Almac&eacute;n</div>
-						<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
-						<div class="divCajaPrincipal">
-							<div class="divCajaPrincipalTitulo">Datos del Equipo</div>
-							<table width="98%" align="center" border="0" cellpadding="1" cellspacing="1" style="background: #FFF;">
-								<tr>
-									<td width="20%" class="estiloTitulosDatos">Imei</td>
-									<td width="43%" class="estiloDatosBusqueda"><span id="datos_imei"><?=$rowNoEnviar['imei'];?></span><input type='text' style='display:none;' name='txt_mod_imei' id='txt_mod_imei' value='<?=$rowNoEnviar['imei'];?>' /></td>
-									<td width="17%" align="center" class="estiloTitulosDatos">Modelo</td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Serie</td>
-									<td class="estiloDatosBusqueda"><span id="datos_serial"><?=$rowNoEnviar['serial'];?></span><input type='text' style='display:none;' name='txt_mod_serial' id='txt_mod_serial' value='<?=$rowNoEnviar['serial'];?>' /></td>
-									<td rowspan="7"><div style="margin: 0 auto 0 auto; width: 150px;border:1px solid #CCC; background:#f0f0f0; height:60px; font-size:36px; text-align:center; padding:15px;"><?=$rowNoEnviar['modelo'];?></div></td>											
-								</tr>								
-								<tr>
-									<td class="estiloTitulosDatos">Folio</td>
-									<td class="estiloDatosBusqueda"><span id="datos_lote"><?=$rowDatos['lote'];?></span><input type='text' style='display:none;' name='txt_mod_lote' id='txt_mod_lote' value='<?=$rowNoEnviar['lote'];?>' /></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">MFGDate</td>
-									<td class="estiloDatosBusqueda"><span id="datos_clave"><?=$rowDatos['mfgdate'];?></span><input type='text' style='display:none;' name='txt_mod_clave' id='txt_mod_clave' value='<?=$rowNoEnviar['mfgdate'];?>' /></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Movimiento</td>
-									<td class="estiloDatosBusqueda"><span id="datos_movimiento"><?=$rowDatos['num_movimiento'];?></span><input type='text' style='display:none;' name='txt_mod_movimiento' id='txt_mod_movimiento' value='<?=$rowNoEnviar['num_movimiento'];?>' /></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowDatos['status'];?></span><input type='text' style='display:none;' name='txt_mod_sim' id='txt_mod_sim' value='<?=$rowNoEnviar['sim'];?>' /></td>											
-								</tr>
-								<tr>
-									<td class="estiloTitulosDatos">Status Proceso</td>
-									<td class="estiloDatosBusqueda"><span id="datos_sim"><?=$rowDatos['statusProceso'];?></span><input type='text' style='display:none;' name='txt_mod_sim' id='txt_mod_sim' value='<?=$rowNoEnviar['sim'];?>' /></td>											
-								</tr>
-							</table>
-						</div>
-						<br><br>						
+					<div style="clear: both;margin-bottom: 5px;">&nbsp;</div>
 <?
 					}
 				}

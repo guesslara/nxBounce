@@ -1,7 +1,17 @@
 <?
+	function conectarBd(){
+		require("../../includes/config.inc.php");
+		$link=mysql_connect($host,$usuario,$pass);
+		if($link==false){
+		    echo "Error en la conexion a la base de datos";
+		}else{
+		    mysql_select_db($db);
+		    return $link;
+		}				
+	}
 	//guardar reparacion
 	//leemos los valores y asigna los nombres de las variables como en el formulario
-	$sqlA="UPDATE alm_omega SET existencias=existencias-1 WHERE id_prod LIKE '".$_GET['mod']."%'";
+	//$sqlA="UPDATE alm_omega SET existencias=existencias-1 WHERE id_prod LIKE '".$_GET['mod']."%'";
 	foreach($_POST as $nombre_campo=>$valor){
 		$asignacion="\$".$nombre_campo."='".$valor."';";
 		eval($asignacion);
@@ -50,11 +60,11 @@
 		$sim_diag="Buen estado";
 	}
 		
-	include("../php/conectarbase.php");
+	
 	//actualizar el campo status en la tabla equiposrep
 	$sql="update equiposrep set status_rep='$status',obsrep='$observaciones',fechafinrep='$fecha_fin',sim_diag='$sim_diag' where ot='$ot'";
 	//echo $sql."<br>";
-	mysql_db_query("db_iqe_ref",$sql);
+	mysql_query($sql,conectarBd());
 	//se recogen las observaciones
 	//falta actualizar las observaciones del formulario
 /********************************************************************************************/	
@@ -66,10 +76,10 @@
 				//echo "inserta en diagnostico $i<br>";
 				$sql="INSERT INTO repdiagnostico (clavediag, ot,des,posicion) values ('$diag[$i]','$ot','$diag1[$i]','$i')";
 				//echo $sql."<br>";
-				mysql_db_query("db_iqe_ref",$sql);
+				mysql_query($sql,conectarBd());
 			}else{
 				$sql="INSERT INTO repdiagnostico (clavediag, ot,des,posicion) values ('-','$ot','-','$i')";
-				mysql_db_query("db_iqe_ref",$sql);
+				mysql_query($sql,conectarBd());
 			}
 		}
 		//insertar en rep_refac_utilizadas
@@ -78,11 +88,11 @@
 				//echo "inserta en refaccion $i<br>";
 				$sql="INSERT INTO rep_refac_utilizadas (claverefac, ot,des,posicion) values ('$refac[$i]','$ot','$refac1[$i]','$i')";
 				//echo $sql."<br>";
-				mysql_db_query("db_iqe_ref",$sql);
+				mysql_query($sql,conectarBd());
 			}else{
 				$sql="INSERT INTO rep_refac_utilizadas (claverefac, ot,des,posicion) values ('-','$ot','-','$i')";
 				//echo $sql."<br>";
-				mysql_db_query("db_iqe_ref",$sql);
+				mysql_query($sql,conectarBd());
 			}
 		}
 		//insertar en rep_efectuada
@@ -91,12 +101,12 @@
 				//echo "inserta en reparacion $i<br>";
 				$sql="INSERT INTO rep_efectuada (clave_rep, ot,des,posicion) values ('$repefec[$i]','$ot','$repefec1[$i]','$i')";
 				//echo $sql."<br>";
-				mysql_db_query("db_iqe_ref",$sql);
+				mysql_query($sql,conectarBd());
 			}else{
 				//echo "inserta en reparacion $i<br>";
 				$sql="INSERT INTO rep_efectuada (clave_rep, ot,des,posicion) values ('-','$ot','-','$i')";
 				//echo $sql."<br>";
-				mysql_db_query("db_iqe_ref",$sql);
+				mysql_query($sql,conectarBd());
 			}
 		}
 	}
@@ -106,7 +116,7 @@
 			//echo "inserta en diagnostico $i<br>";
 			$sql="UPDATE repdiagnostico set clavediag='$diag[$i]',ot='$ot',des='$diag1[$i]' where ot='$ot' AND posicion='$i'";
 			//echo $sql."<br>";
-			mysql_db_query("db_iqe_ref",$sql);
+			mysql_query($sql,conectarBd());
 		}//fin for
 		/*************************/
 		//insertar en rep_refac_utilizadas
@@ -115,7 +125,7 @@
 			//$sql="INSERT INTO rep_refac_utilizadas (claverefac, ot,des) values ('$refac[$i]','$ot','$refac1[$i]')";
 			$sql="UPDATE rep_refac_utilizadas set claverefac='$refac[$i]',ot='$ot',des='$refac1[$i]' where ot='$ot' AND posicion='$i'";
 			//echo $sql."<br>";
-			mysql_db_query("db_iqe_ref",$sql);
+			mysql_query($sql,conectarBd());
 			
 		}//fin for
 		/**************************/
@@ -125,21 +135,21 @@
 			//$sql="INSERT INTO rep_efectuada (clave_rep, ot,des) values ('$repefec[$i]','$ot','$repefec1[$i]')";
 			$sql="UPDATE rep_efectuada set clave_rep='$repefec[$i]',ot='$ot',des='$repefec1[$i]' where ot='$ot' AND posicion='$i'";
 			//echo $sql."<br>";
-			mysql_db_query("db_iqe_ref",$sql);
+			mysql_query($sql,conectarBd());
 		}//fin for
 	}
 	//se cambia el status general para ubicar donde esta el archivo
 	if(($status=="Rep")||($status=="REP")){
 		$sql="UPDATE equiposrep set statusgral='CC',status_cc='CC' where ot='$ot'";
-		mysql_db_query("db_iqe_ref",$sql);
+		mysql_query($sql,conectarBd());
 	}
 	if(($status=="NoRep")){
 		$sql="UPDATE equiposrep set statusgral='EMP',status_cc='SPC',status_despacho='EMP' where ot='$ot'";
-		mysql_db_query("db_iqe_ref",$sql);
+		mysql_query($sql,conectarBd());
 	}
 	if(($status=="Scrap")){
 		$sql="UPDATE equiposrep set statusgral='EMP',status_cc='SPC',status_despacho='EMP' where ot='$ot'";
-		mysql_db_query("db_iqe_ref",$sql);
+		mysql_query($sql,conectarBd());
 	}
 	//actualizacion de inventarios en almacen omega +++++++++++++++++++++
 	//$model=$_GET['mod'];
@@ -148,7 +158,7 @@
 	//echo $sqlA;	
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//se redirecciona a otra pagina
-	//echo "<script language='javascript'>alert('Datos de la Reparación Guardados.');<script>";
+	echo "<script type='text/javascript'>alert('Datos de la Reparación Guardados.');<script>";	
 	header("Location: index.php");
 	exit;
 ?>

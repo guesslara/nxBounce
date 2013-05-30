@@ -52,7 +52,8 @@ body {
   </tr>
 </table>
 <?
-	$sql="SELECT * FROM catrefacciones where modelo LIKE '$p%'";	
+	//$sql="SELECT * FROM catrefacciones where modelo LIKE '$p%'";
+	$sql="SELECT * FROM catrefacciones";	
 	$result=mysql_query($sql,conectarBd());
 ?> 
 <span class="style10"><!--NO existe--></span>

@@ -80,6 +80,7 @@ class modelo{
                     <td width="91" style="height: 15px;padding: 5px;border: 1px solid #CCC;background: #f0f0f0;text-align: center;font-weight: bold;">Serie</th>
                     <td widdth="140" style="height: 15px;padding: 5px;border: 1px solid #CCC;background: #f0f0f0;text-align: center;font-weight: bold;">Modelo</th>
                     <td width="66" style="height: 15px;padding: 5px;border: 1px solid #CCC;background: #f0f0f0;text-align: center;font-weight: bold;">F. de Recibo</th>
+                    <td width="66" style="height: 15px;padding: 5px;border: 1px solid #CCC;background: #f0f0f0;text-align: center;font-weight: bold;">Status</th>
                     <td width="66" style="height: 15px;padding: 5px;border: 1px solid #CCC;background: #f0f0f0;text-align: center;font-weight: bold;">Acciones</th>
                 </tr>
 <?
@@ -91,7 +92,9 @@ class modelo{
                     <td width="91" style="text-align: center;height: 15px;padding: 5px;border-bottom: 1px solid #CCC;"><?=$row["esn"];?></th>
                     <td width="140" style="text-align: center;height: 15px;padding: 5px;border-bottom: 1px solid #CCC;"><?=$row["modelo"];?></th>
                     <td width="66" style="text-align: center;height: 15px;padding: 5px;border-bottom: 1px solid #CCC;"><?=$row["fecharec"];?></th>
-                    <td width="66" style="text-align: center;height: 15px;padding: 5px;border-bottom: 1px solid #CCC;"><a href="repeqpo.php?action=mostrar&esn=<?=$row["esn"];?>&status=<?=$row["status_rep"];?>&ot=<?=$row["ot"];?>" target="_blank" style="color:blue;text-decoration: none;">Diagnosticar</a></th>
+                    <td width="66" style="text-align: center;height: 15px;padding: 5px;border-bottom: 1px solid #CCC;"><?=$row["status_rep"];?></th>
+                    <!--<td width="66" style="text-align: center;height: 15px;padding: 5px;border-bottom: 1px solid #CCC;"><a href="repeqpo.php?action=mostrar&esn=<?=$row["esn"];?>&status=<?=$row["status_rep"];?>&ot=<?=$row["ot"];?>" target="_blank" style="color:blue;text-decoration: none;">Diagnosticar</a></th>-->
+                    <td width="66" style="text-align: center;height: 15px;padding: 5px;border-bottom: 1px solid #CCC;"><a href="#" onclick="mostrarVentanaReparacion('<?=$row["esn"];?>','<?=$row["status_rep"];?>','<?=$row["ot"];?>')" style="color:blue;text-decoration: none;">Diagnosticar</a></th>
                 </tr>
 <?
             }

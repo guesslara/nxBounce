@@ -87,7 +87,7 @@
 <div id="transparenciaGeneral1" class="transparenciaGeneral" style="display:none;">
 	<div id="divMensajeCaptura" class="ventanaDialogo">
 		<div id="barraTitulo1VentanaDialogoValidacion" class="barraTitulo1VentanaDialogoValidacion">Informaci&oacute;n<div id="btnCerrarVentanaDialogo"><a href="#" onclick="cerrarVentana('divMensajeCaptura')" title="Cerrar Ventana"><img src="../../img/close.gif" border="0" /></a></div></div>
-		<div id="listadoEmpaqueValidacion" style="border:1px solid #CCC; margin:4px; font-size:10px;height:93%; overflow:auto;"></div>
+		<div id="divReparaciones" style="border:1px solid #CCC; margin:4px; font-size:10px;height:93%; overflow:auto;"></div>
 	</div>
 </div>	
 <?

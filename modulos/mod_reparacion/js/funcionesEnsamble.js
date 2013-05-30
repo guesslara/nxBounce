@@ -89,3 +89,11 @@ function buscarImei(evento,idUsuario){
 		$("#esn").attr("value","");
 	}	
 }
+function cerrarVentana(div){
+	$("#transparenciaGeneral1").hide();
+}
+function mostrarVentanaReparacion(serial,status,ot){
+	$("#transparenciaGeneral1").show();
+	parametros="action=mostrar&esn="+serial+"&status="+status+"&ot="+ot;
+	ajaxApp("divReparaciones","repeqpo.php",parametros,"GET");
+}

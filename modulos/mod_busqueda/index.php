@@ -8,10 +8,10 @@
 		exit;
 	}else{
 		//se extrae el proceso
-		$sqlProc="SELECT * FROM cat_procesos WHERE descripcion='".$proceso."'";
+		/*$sqlProc="SELECT * FROM cat_procesos WHERE descripcion='".$proceso."'";
 		$resProc=mysql_query($sqlProc,conectarBd());
 		$rowProc=mysql_fetch_array($resProc);
-		$proceso=$rowProc['id_proc'];
+		$proceso=$rowProc['id_proc'];*/
 	}
 	
 	function conectarBd(){

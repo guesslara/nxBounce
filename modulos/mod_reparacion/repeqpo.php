@@ -118,7 +118,7 @@ a:active {text-decoration: none;color: #000000;}
 		$esn=$_GET['esn'];
 		include("../php/conectarbase.php");
 		$sqlx="select * from equiposrep where esn='$esn' order by fecharec DESC";
-		$resultx=mysql_db_query("db_iqe_ref",$sqlx);
+		$resultx=mysql_query($sqlx,conectarBd());
 		?>
     <span class="Estilo1"><img src="../img/Attention.png" alt="Informaci&oacute;n" width="41" height="43" />&nbsp;Seleccione el equipo a Reparar...</span>
   </p>
@@ -375,7 +375,7 @@ onmouseout="this.style.backgroundColor=anterior" />
 				//estraemos de la base de datos los registros coincidentes
 				$sql="SELECT * from repdiagnostico where ot='$ot'";
 				//echo $sql;
-				$result=mysql_db_query("db_iqe_ref",$sql);
+				$result=mysql_query($sql,conectarBd());
 				while($fila=mysql_fetch_array($result))
 				{
 					$clave[]=$fila['clavediag'];
@@ -425,7 +425,7 @@ onmouseout="this.style.backgroundColor=anterior" />
 			//estraemos de la base de datos los registros coincidentes
 			$sql="SELECT * from rep_refac_utilizadas where ot='$ot'";
 			//echo $sql;
-			$result=mysql_db_query("db_iqe_ref",$sql);
+			$result=mysql_query($sql,conectarBd());
 			while($fila=mysql_fetch_array($result))
 			{
 				$clave1[]=$fila['claverefac'];
@@ -492,7 +492,7 @@ onmouseout="this.style.backgroundColor=anterior" />
 			//estraemos de la base de datos los registros coincidentes
 			$sql="SELECT * from rep_efectuada where ot='$ot'";
 			//echo $sql;
-			$result=mysql_db_query("db_iqe_ref",$sql);
+			$result=mysql_query($sql,conectarBd());
 			while($fila=mysql_fetch_array($result))
 			{
 				$clave2[]=$fila['clave_rep'];
