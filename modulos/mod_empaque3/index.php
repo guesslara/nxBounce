@@ -87,7 +87,7 @@
 <!--<div id="cargadorEmpaque" class="cargadorEmpaque">Cargando...</div>-->
 <input type="hidden" name="txtProcesoEmpaque" id="txtProcesoEmpaque" value="<?=$proceso;?>" />
 <input type="hidden" name="txtProcesoEmpaqueEnvio" id="txtProcesoEmpaqueEnvio" value="<?=$proceso1;?>" />
-<input type="hidden" name="txtIdUsuarioEmpaque" id="txtIdUsuarioEmpaque" value="<?=$_SESSION["idUsuarioBounce"];?>" />
+<input type="hidden" name="txtIdUsuarioEmpaque" id="txtIdUsuarioEmpaque" value="<?=$_SESSION[$txtApp['session']['idUsuario']];?>" />
 <div id="contenedorEnsamble">
 	<div id="contenedorEnsamble3">
 		<div id="barraOpcionesEnsamble">

@@ -1226,6 +1226,7 @@
 		}
 		
 		public function nuevaEntrega(){
+			include("../../includes/txtApp.php")
 ?>
 			<table width="600" align="center" border="0" cellpadding="1" cellspacing="0" style="background:#FFF; border:1px solid #CCC;margin-top: 10px;font-size: 12px;">
 				<tr>
@@ -1238,13 +1239,13 @@
 				</tr>
 				<tr>
 					<td style="background:#f0f0f0; border:1px solid #CCC;height: 20px;padding: 5px;">T&eacute;cnico</td>
-					<td colspan="3"><input type="text" name="txtTecnico" id="txtTecnico" value="<?=$_SESSION['nombre_nx']." ".$_SESSION['apellido_nx'];?>" readonly="readonly" style="width:300px;" /></td>
+					<td colspan="3"><input type="text" name="txtTecnico" id="txtTecnico" value="<?=$_SESSION[$txtApp['session']['nombreUsuario']]." ".$_SESSION[$txtApp['session']['apellidoUsuario']];?>" readonly="readonly" style="width:300px;" /></td>
 				</tr>
-				<tr>
+				<!--<tr>
 					<td style="background:#f0f0f0; border:1px solid #CCC;height: 20px;padding: 5px;">Entrega</td>
 					<td><input type="text" name="txtEntrega" id="txtEntrega" /></td>
 					<td colspan="2">&nbsp;</td>
-				</tr>
+				</tr>-->
 				<tr>
 					<td style="background:#f0f0f0; border:1px solid #CCC;height: 20px;padding: 5px;">Modelo</td>
 					<td>
@@ -1390,7 +1391,7 @@
 				<tr>
 					<td colspan="5" align="right">
 					<input type="hidden" name="txtEmpaque" id="txtEmpaque" value="<?=$idEmpaque;?>" />
-					<input type="button" value="Nueva caja" onclick="nuevaCaja()" style=" width:120px;height:30px; border:1px solid #000; font-size:10px; background:#06F; color:#FFF; font-weight:bold;" />
+					<input type="button" value="Nueva Captura" onclick="nuevaCaja()" style=" width:120px;height:30px; border:1px solid #000; font-size:10px; background:#06F; color:#FFF; font-weight:bold;" />
 				    </td>
 				</tr>
 			</table><br /><br />

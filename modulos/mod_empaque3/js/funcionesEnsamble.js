@@ -166,7 +166,8 @@ function guardaMovimiento(){
 	//se recuperan lso datos
 	var txtFecha=document.getElementById("txtFecha").value;
 	var txtTecnico=document.getElementById("txtTecnico").value;
-	var txtEntrega=document.getElementById("txtEntrega").value;
+	//var txtEntrega=document.getElementById("txtEntrega").value;
+	var txtEntrega="-";
 	//var txtCaja=document.getElementById("txtCaja").value;
 	var cboModelo=document.getElementById("cboModelo").value;
 	
@@ -221,7 +222,8 @@ function verMas(idEmpaque){
 	ajaxApp("detalleEmpaque","controladorEnsamble.php","action=verDetalleEmpaque&idEmpaque="+idEmpaque,"POST");
 }
 function nuevaCaja(){
-	var caja=prompt("Introduzca el numero de caja");
+	//var caja=prompt("Introduzca el numero de caja");
+	var caja=1;
 	if(caja=="" || caja==null){
 		alert("Introduzca el numero de caja a capturar");
 	}else{
